@@ -13,6 +13,12 @@ if [[ ! -v DOTFILES ]]; then
 	export DOTFILES="${HOME}/.dotfiles"
 fi
 
+## Config
+
+if [[ ! -v CONFIG ]]; then
+	export CONFIG="${HOME}/.config"
+fi
+
 ## Starship config path
 if [[ ! -v STARSHIP_CONFIG ]]; then
 	export STARSHIP_CONFIG="${DOTFILES}/starship.toml"
@@ -53,5 +59,29 @@ alias gc="git commit -m"
 alias gp="git push"
 
 # General shortcuts
-alias config="nvim ${DOTFILES}"
+# alias config="nvim ${DOTFILES}"
 alias v="nvim"
+
+
+### Links / ln
+
+[ ! -e "${CONFIG}/ghostty" ] && ln -s "${DOTFILES}/ghostty" "${CONFIG}/ghostty"
+[ ! -e "${CONFIG}/nvim" ] && ln -s "${DOTFILES}/nvim" "${CONFIG}/nvim"
+[ ! -e "${HOME}/.zshrc" ] && ln -s "${DOTFILES}/.zshrc" "${HOME}/.zshrc"
+[ ! -e "${CONFIG}/btop" ] && ln -s "${DOTFILES}/btop" "${CONFIG}/btop"
+
+### Customizations
+
+config() {
+	local dir_path
+	dir_path=$(pwd)
+	
+	trap 'cd "${dir_path}"' EXIT
+	
+	cd "${DOTFILES}" || {
+		echo "Failed to navigate to the config path"
+		return 1
+	}
+	
+	nvim "."
+}
