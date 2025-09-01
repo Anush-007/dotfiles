@@ -71,17 +71,14 @@ alias v="nvim"
 [ ! -e "${CONFIG}/btop" ] && ln -s "${DOTFILES}/btop" "${CONFIG}/btop"
 
 ### Customizations
-
 config() {
-	local dir_path
-	dir_path=$(pwd)
-	
-	trap 'cd "${dir_path}"' EXIT
-	
-	cd "${DOTFILES}" || {
-		echo "Failed to navigate to the config path"
-		return 1
-	}
-	
-	nvim "."
+  pushd "${DOTFILES}" > /dev/null || {
+    echo "Failed to navigate to the config path"
+    return 1
+  }
+
+  nvim "."
+
+  popd > /dev/null
 }
+
